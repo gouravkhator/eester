@@ -51,6 +51,5 @@ Email: `g@gmail.com` and Password: `goku`
 * CSRF protection
 * User settings edit feature and user dashboard
 * User image saving and showcasing
-* Admin panel with MFA setup for admins
-* Role management in ExpressJS
+* Admin panel with MFA setup for admins and [Role based access control (RBAC) using AdminJS](https://docs.adminjs.co/tutorial-rbac.html)
 * Writing Tests for the API endpoints

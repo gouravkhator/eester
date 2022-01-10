@@ -16,15 +16,17 @@ const session = require('express-session');
 // routers
 const loginRouter = require('./routes/login');
 const userRouter = require('./routes/user');
-const { allowOnlyIfAuthenticated } = require('./middlewares');
+const { allowOnlyIfAuthenticated, allowOnlyAdmins } = require('./middlewares');
 
 const ERROR_CODES = require('./utils/_globals');
 const { initializePassport, initializeDB } = require('./utils/authAndDBSetup');
+const { adminRouteInitialSetup } = require('./utils/adminSetup');
 
 const app = express();
 
 initializePassport(); // initialize passport using our own utils
 initializeDB(); // connect to mongodb using mongoose
+const {adminMain, adminRouter} = adminRouteInitialSetup(); // setup the admin panel with connecting it to the db connection 
 
 // -----middlewares : global for all requests-----
 app.use(textCompression()); // text compression
@@ -57,6 +59,8 @@ app.use((req, res, next) => {
     req.flash(ERROR_CODES.USER_NOT_FOUND, 'User does not exists with that email id..');
     next();
 });
+
+app.use(adminMain.options.rootPath, allowOnlyAdmins, adminRouter); // setup admin panel with admin Router
 
 // routers and routes
 app.use('/auth', loginRouter);

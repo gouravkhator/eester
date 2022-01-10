@@ -1,11 +1,10 @@
-const passport = require('passport');
 const mongoose = require('mongoose');
-const User = require('../models/user');
-
-const ERROR_CODES = require('./_globals');
-
+const passport = require('passport');
 // passport strategies
 const LocalStrategy = require('passport-local').Strategy;
+
+const User = require('../models/user');
+const ERROR_CODES = require('./_globals');
 
 function initializePassport() {
     const authenticateUser = async (email, password, done) => {
@@ -48,12 +47,12 @@ function initializeDB() {
     mongoose.connect(process.env.DATABASE_URL,
         { useNewUrlParser: true, useUnifiedTopology: true });
 
-    const db = mongoose.connection;
-    db.on('error', err => {
+    const dbConnection = mongoose.connection;
+    dbConnection.on('error', err => {
         console.error(err);
     });
 
-    db.once('open', () => console.log('Connected to mongoose'));
+    dbConnection.once('open', () => console.log('Connected to mongoose'));
 }
 
 module.exports = {

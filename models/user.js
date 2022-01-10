@@ -11,6 +11,9 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
         unique: true,
+        lowercase: true, 
+        // whether or not the data comes as upper case or lowercase or mixedcase,
+        // it will always save as lowercase if we specify lowercase: true
         validate: [validator.isEmail, 'Please enter a valid email address']
     },
     password: {
