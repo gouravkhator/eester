@@ -1,0 +1,13 @@
+<section id="register">
+    <h2 id="section-title">Sign Up</h2>
+
+    <article id="section-content">
+        <form action="/auth/register" method="POST">
+            <%- include('../partials/_loginFormFields.ejs', loggingIn=false) %>
+
+            <button type="submit">Sign up</button>
+        </form>
+
+        <a href="/auth/login">Login</a>
+    </article>
+</section>

@@ -1,0 +1,27 @@
+<header>
+    <nav class="header-nav">
+        <a href="/" class="header-logo">
+            <img src="/images/logo.png" alt="Logo" width="50" height="50">
+        </a>
+
+        <ul>
+            <% if(!user || user == null) { %>
+            <li>
+                <a href="/auth/login" class="header-link">Login</a>
+            </li>
+            <li>
+                <a href="/auth/register" class="header-link">Register</a>
+            </li>
+            <% } else { %>
+            <li>
+                <form action="/auth/logout" method="POST">
+                    <button type="submit">Logout</button>
+                </form>
+            </li>
+            <li>
+                <a href="/user/settings" class="header-link">Settings</a>
+            </li>
+            <% } %>
+        </ul>
+    </nav>
+</header>

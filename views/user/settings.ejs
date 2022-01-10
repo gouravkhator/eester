@@ -1,0 +1,11 @@
+<section id="settings">
+    <h2 id="section-title">Settings</h2>
+
+    <article id="section-content">
+        <form action="/user/settings" method="POST">
+            <%- include('../partials/_loginFormFields.ejs', loggingIn=false) %>
+            
+            <button type="submit">Submit</button>
+        </form>
+    </article>
+</section>

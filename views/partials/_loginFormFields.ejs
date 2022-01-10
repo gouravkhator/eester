@@ -1,0 +1,25 @@
+<% if( loggingIn == false ) { %>
+<div>
+    <label for="name">Name</label>
+    <input type="text" name="name" value="<%= user && user.name %>"required/>
+</div>
+<% } %>
+
+<div>
+    <label for="email">Email</label>
+    <input type="email" name="email" value="<%= user && user.email %>" required/>
+</div>
+<!-- as soon as email changes here, add a verify email button, 
+    which will send the otp to that email and the otp field will also popup -->
+<!-- we can use lit element for these small components and all -->
+<div>
+    <label for="password">Password</label>
+    <input type="password" name="password" required/>
+</div>
+
+<% if( loggingIn == false ) { %>
+<div>
+    <label for="password-confirm">Confirm Password</label>
+    <input type="password" name="password-confirm" required/>
+</div>
+<% } %>
