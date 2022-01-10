@@ -12,13 +12,13 @@ This is a short template, to pack EJS as templating engine, with Express and Mon
 
 * Run the below command to install the dependencies:
 
-    ```sh
+    ```bash
     npm i
     ```
 
 * Setup the Mongodb database and add the database url in the `.env` file. Also add the session secret as some random session secret key to maintain the session:
 
-    ```sh
+    ```bash
     DATABASE_URL=mongodb+srv://<username>:<password>@cluster0.wtxus.mongodb.net/<dbname>?retryWrites=true&w=majority
     SESSION_SECRET=<session_secret>
     ```
@@ -27,13 +27,13 @@ This is a short template, to pack EJS as templating engine, with Express and Mon
 
 * Run the server:
 
-    ```sh
+    ```bash
     npm start
     ```
 
 * Run the server in development mode:
 
-    ```sh
+    ```bash
     npm run dev
     ```
 
