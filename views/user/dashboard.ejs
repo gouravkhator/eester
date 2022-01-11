@@ -1,0 +1,42 @@
+<% user = locals.user ?? null %>
+
+<section id="dashboard">
+    <h2 id="section-title">Profile</h2>
+
+    <article id="section-content">
+        <% if (!user) { %>
+            <h3>Kindly click on login and then view your profile..</h3>
+        <% } else { %>
+            <table>
+                <!-- TODO: Edit buttons should convert that text to input fields and then once we focus outside, 
+                    it should convert that to updated text again, and should do a PUT request to the /user/<userid>,
+                    This should update the fields in the db.. -->
+                <tr>
+                    <td>Name</td>
+                    <td><%= user.name %></td>
+                    <td>
+                        <button>Edit</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td><%= user.email %></td>
+                    <td>
+                        <button>Edit</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Role</td>
+                    <td><%= user.role %></td>
+                    <td>
+                        <button>Edit</button>
+                    </td>
+                </tr>
+            </table>
+        <% } %>
+
+        <form action="/user/<%= user._id %>?_method=DELETE" method="POST">
+            <button>Delete Account</button>
+        </form>
+    </article>
+</section>

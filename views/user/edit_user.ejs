@@ -1,0 +1,34 @@
+<section id="edit-user">
+    <h2 id="section-title">Edit Profile</h2>
+
+    <article id="section-content">
+        <form action="/user/<%= user && user._id %>?_method=PUT" method="POST">
+            <div>
+                <label for="name">Name</label>
+                <input type="text" name="name" value="<%= user && user.name %>"/>
+            </div>
+
+            <div>
+                <label for="email">Email</label>
+                <input type="email" name="email" value="<%= user && user.email %>"/>
+            </div>
+            <!-- TODO: as soon as email changes here, add a verify email button, 
+                which will send the otp to that email and the otp field will also popup.
+                We can use lit element for these small components and all -->
+
+            <!-- TODO: add an eye icon, which shows the user.password when clicked on it -->
+            <div>
+                <label for="password">Password</label>
+                <input type="password" name="password"/>
+            </div>
+
+            <div>
+                <!-- TODO: password and password-confirm should be tallied and if same, then the form should be submitted..-->
+                <label for="password-confirm">Confirm Password</label>
+                <input type="password" name="password-confirm"/>
+            </div>
+
+            <button type="submit">Edit Profile</button>
+        </form>
+    </article>
+</section>

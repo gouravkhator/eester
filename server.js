@@ -18,7 +18,6 @@ const loginRouter = require('./routes/login');
 const userRouter = require('./routes/user');
 const { allowOnlyIfAuthenticated, allowOnlyAdmins } = require('./middlewares');
 
-const { ERROR } = require('./utils/_globals');
 const { initializePassport, initializeDB } = require('./utils/authAndDBSetup');
 const { adminRouteInitialSetup } = require('./utils/adminSetup');
 
@@ -53,12 +52,12 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// to support flash message
-app.use((req, res, next) => {
-    req.flash('password_incorrect', ERROR.password_incorrect);
-    req.flash('user_not_found', ERROR.user_not_found);
-    next();
-});
+// TODO: to support flash message
+// app.use((req, res, next) => {
+//     req.flash('password_incorrect', ERROR.password_incorrect);
+//     req.flash('user_not_found', ERROR.user_not_found);
+//     next();
+// });
 
 app.use(adminMain.options.rootPath, allowOnlyAdmins, adminRouter); // setup admin panel with admin Router
 
@@ -71,7 +70,7 @@ app.get('/', (req, res) => {
 });
 
 // custom error handler -- should be put at the last, after every route
-// as the next calls with err would hit this error handler afterwards..
+// as the next(err) would hit this error handler after the normal routes..
 app.use((err, req, res, next) => {
     res.locals.error_msg = err.message;
     res.status(err.statusCode ?? 500);
@@ -85,3 +84,4 @@ app.get('/*', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server started on ${PORT}`));
+

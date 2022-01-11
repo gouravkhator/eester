@@ -13,10 +13,17 @@ function authorizeUser(req, res, next) {
     }
 }
 
-router.get('/settings', (req, res) => {
-    res.render('user/settings', { user: req.user });
+router.get('/dashboard', (req, res) => {
+    res.render('user/dashboard', { user: req.user });
 });
 
+// keeping the edit page and route for now
+// After we implement dynamic edit in the dashboard itself, we can remove this route
+router.get('/edit', (req, res) => {
+    res.render('user/edit_user', { user: req.user });
+});
+
+/* ---Some other api endpoints for nerds--- */
 router.get('/:id', authorizeUser, async (req, res) => {
     let user = null;
 
@@ -41,8 +48,8 @@ router.put('/:id', authorizeUser, async (req, res) => {
         existingUser.email = updatedDetails.email;
         existingUser.password = updatedDetails.password;
         await existingUser.save();
-        // TODO: show a flash message that settings are saved successfully
-        res.redirect('/user/settings');
+        // TODO: show a flash message that profile edits are saved successfully
+        res.redirect('/user/dashboard');
     } catch (e) {
         if (existingUser === null) {
             // we could not find that user in our db
@@ -52,7 +59,7 @@ router.put('/:id', authorizeUser, async (req, res) => {
             });
         } else {
             // we could not save the updated details in our db
-            res.render('user/settings', {
+            res.render('user/edit_user', {
                 user: req.user,
                 error_msg: 'We could not update the details, please try again..',
             });
@@ -62,12 +69,14 @@ router.put('/:id', authorizeUser, async (req, res) => {
 
 router.delete('/:id', authorizeUser, async (req, res) => {
     try {
-        await User.deleteOne({ _id: req.params.id });
+        const user = await User.findById({ _id: req.params.id });
+        await user.deleteOne({});
         res.redirect('/auth/login');
+        // TODO: show a success message that account is deleted
     } catch (e) {
-        res.render('login/login', {
+        res.render('user/dashboard', {
             user: req.user,
-            error_msg: 'We could not find any user with the authorized id! Please login again to delete..',
+            error_msg: 'We could not delete the user with the given id! Please try again..',
         });
     }
 });

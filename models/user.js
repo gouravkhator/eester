@@ -43,10 +43,17 @@ userSchema.pre('save', async function (next) {
     }
 });
 
-userSchema.pre('deleteOne', function (next){
-    // as deleteOne is called on the model and not on instance, so we have _conditions as the object containing all conditions
-    if(this._conditions?.role === 'admin'){
-        next(new Error('Admin should not be deleted..'));
+// as deleteOne is normally called on the model, but then we can have multiple kinds of conditions
+// so to make it simple, we added deleteOne method to the document also
+// and check if this refers to Document or to query, and if it is the document, then we can restrict deletion of user with role 'admin'
+// to use deleteOne for document, first call find method, then with user instance, we can call deleteOne method
+userSchema.pre('deleteOne', {document: true, query: true}, function (next){
+    if(this instanceof mongoose.Document){
+        if(this.role === 'admin'){
+            next(new Error('Admin should not be deleted..'));
+        }else{
+            next();
+        }
     }else{
         next();
     }
