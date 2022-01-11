@@ -1,5 +1,7 @@
-<% if(messages.error) { %>
+<% error_msg = locals.error_msg ?? '' %>
+
+<% if(error_msg) { %>
 <div id="error-msg">
-    <%= messages.error %>
+    <%= error_msg %>
 </div>
 <% } %>

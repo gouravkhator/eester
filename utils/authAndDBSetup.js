@@ -4,7 +4,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
 const User = require('../models/user');
-const ERROR_CODES = require('./_globals');
+const { ERROR } = require('./_globals');
 
 function initializePassport() {
     const authenticateUser = async (email, password, done) => {
@@ -20,14 +20,14 @@ function initializePassport() {
         3rd param is the object containing error message for the user.
         */
         if (user == null) {
-            return done(null, false, { error_code: ERROR_CODES.USER_NOT_FOUND });
+            return done(null, false, { error_msg: ERROR.user_notfound_email });
         }
 
         try {
             if (await user.passwordIsValid(password)) {
                 return done(null, user);
             } else {
-                return done(null, false, { error_code: ERROR_CODES.PASSWORD_INCORRECT });
+                return done(null, false, { error_msg: ERROR.password_incorrect });
             }
         } catch (e) {
             return done(e);

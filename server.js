@@ -18,7 +18,7 @@ const loginRouter = require('./routes/login');
 const userRouter = require('./routes/user');
 const { allowOnlyIfAuthenticated, allowOnlyAdmins } = require('./middlewares');
 
-const ERROR_CODES = require('./utils/_globals');
+const { ERROR } = require('./utils/_globals');
 const { initializePassport, initializeDB } = require('./utils/authAndDBSetup');
 const { adminRouteInitialSetup } = require('./utils/adminSetup');
 
@@ -55,8 +55,8 @@ app.use(express.urlencoded({ extended: false }));
 
 // to support flash message
 app.use((req, res, next) => {
-    req.flash(ERROR_CODES.PASSWORD_INCORRECT, 'Password is incorrect! Please retry again..');
-    req.flash(ERROR_CODES.USER_NOT_FOUND, 'User does not exists with that email id..');
+    req.flash('password_incorrect', ERROR.password_incorrect);
+    req.flash('user_not_found', ERROR.user_not_found);
     next();
 });
 
@@ -68,6 +68,15 @@ app.use('/user', allowOnlyIfAuthenticated, userRouter);
 
 app.get('/', (req, res) => {
     res.render('main', { user: req.user });
+});
+
+// custom error handler -- should be put at the last, after every route
+// as the next calls with err would hit this error handler afterwards..
+app.use((err, req, res, next) => {
+    res.locals.error_msg = err.message;
+    res.status(err.statusCode ?? 500);
+    // ? INFO: res.locals does not work with redirect method, we have to use render here
+    res.redirect(err.redirectUrl ?? '/');
 });
 
 app.get('/*', (req, res) => {

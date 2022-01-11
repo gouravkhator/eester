@@ -1,7 +1,9 @@
+<% user = locals.user ?? null %>
+
 <% if( loggingIn == false ) { %>
 <div>
     <label for="name">Name</label>
-    <input type="text" name="name" value="<%= user && user.name %>"required/>
+    <input type="text" name="name" value="<%= user && user.name %>" required/>
 </div>
 <% } %>
 

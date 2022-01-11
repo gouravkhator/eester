@@ -2,9 +2,11 @@
     <h2 id="section-title">Settings</h2>
 
     <article id="section-content">
-        <form action="/user/settings" method="POST">
+        <form action="/user/<%= user && user._id %>?_method=PUT" method="POST">
             <%- include('../partials/_loginFormFields.ejs', loggingIn=false) %>
             
+            <!-- !ISSUE: the login fields are required for settings too, we need to pass required=false from here,
+              !  and then add required in loginfields partial, if required is true -->
             <button type="submit">Submit</button>
         </form>
     </article>

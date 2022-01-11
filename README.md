@@ -7,6 +7,8 @@ This is a short template, to pack EJS as templating engine, with Express and Mon
 * User Login/Logout/Register
 * User session management
 * Mongoose and User Models
+* Role based management
+* Admin section
 
 ## Prerequisites and Setup
 
@@ -46,10 +48,11 @@ Email: `g@gmail.com` and Password: `goku`
 * Third Party Authentication Providers like Google, Twitter, Facebook
 * Error and flash message management
 * Email verification via OTP over email
+* Edit page, user dashboard page (view only), delete user link. 
 * Password and confirm password fields to be checked
 * Lit Element to be used to make simple components for EJS
 * CSRF protection
-* User settings edit feature and user dashboard
+* User dashboard
 * User image saving and showcasing
-* Admin panel with MFA setup for admins and [Role based access control (RBAC) using AdminJS](https://docs.adminjs.co/tutorial-rbac.html)
+* Admin panel with MFA setup for admins
 * Writing Tests for the API endpoints
