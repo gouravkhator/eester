@@ -20,8 +20,17 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    role: {
+        type: String,
+        required: true,
+        default: 'general_user',
+        immutable: true,
+        lowercase: true,
+        enum: ['admin', 'general_user'],
+    }
 });
 
+/* ---Hooks and Middlewares for the schema--- */
 userSchema.pre('save', async function (next) {
     try {
         if (this.isModified('password')) {
@@ -34,6 +43,16 @@ userSchema.pre('save', async function (next) {
     }
 });
 
+userSchema.pre('deleteOne', function (next){
+    // as deleteOne is called on the model and not on instance, so we have _conditions as the object containing all conditions
+    if(this._conditions?.role === 'admin'){
+        next(new Error('Admin should not be deleted..'));
+    }else{
+        next();
+    }
+});
+
+/* ---Schema Methods--- */
 userSchema.methods.passwordIsValid = function (guessedPassword) {
     try {
         return bcrypt.compare(guessedPassword, this.password);

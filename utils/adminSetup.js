@@ -7,8 +7,21 @@ const User = require('../models/user');
 function adminRouteInitialSetup() {
     AdminJS.registerAdapter(AdminJSMongoose);
 
+    const canModifyUsers = ({ currentAdmin }) => {
+        return currentAdmin && currentAdmin.role === 'admin';
+    }
+
     const adminMain = new AdminJS({
-        resources: [User],
+        resources: [{
+            resource: User,
+            options: {
+                actions: {
+                    edit: { isAccessible: canModifyUsers },
+                    delete: { isAccessible: canModifyUsers },
+                    new: { isAccessible: canModifyUsers },
+                }
+            }
+        }],
         rootPath: '/admin',
     });
 

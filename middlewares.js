@@ -26,8 +26,11 @@ function allowOnlyIfAuthenticated(req, res, next) {
 }
 
 function allowOnlyAdmins(req, res, next){
-    // TODO: allow only admins and no other users
-    next();
+    if(req.user?.role === 'admin'){
+        return next();
+    }else{
+        return next('Only admins are allowed..');
+    }
 }
 
 module.exports = {

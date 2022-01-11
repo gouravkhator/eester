@@ -13,14 +13,20 @@
                 <a href="/auth/register" class="header-link">Register</a>
             </li>
             <% } else { %>
-            <li>
-                <form action="/auth/logout" method="POST">
-                    <button type="submit">Logout</button>
-                </form>
-            </li>
-            <li>
-                <a href="/user/settings" class="header-link">Settings</a>
-            </li>
+                <li>
+                    <form action="/auth/logout" method="POST">
+                        <button type="submit">Logout</button>
+                    </form>
+                </li>
+                <li>
+                    <a href="/user/settings" class="header-link">Settings</a>
+                </li>
+
+                <% if(user.role && user.role === 'admin') { %>
+                    <li>
+                        <a href="/admin/resources/User" class="header-link">List of Users</a>**
+                    </li>
+                <% } %>
             <% } %>
         </ul>
     </nav>

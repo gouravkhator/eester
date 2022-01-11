@@ -26,7 +26,7 @@ const app = express();
 
 initializePassport(); // initialize passport using our own utils
 initializeDB(); // connect to mongodb using mongoose
-const {adminMain, adminRouter} = adminRouteInitialSetup(); // setup the admin panel with connecting it to the db connection 
+const { adminMain, adminRouter } = adminRouteInitialSetup(); // setup the admin panel with connecting it to the db connection 
 
 // -----middlewares : global for all requests-----
 app.use(textCompression()); // text compression
