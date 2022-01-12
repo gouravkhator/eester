@@ -5,6 +5,20 @@ const ERROR = {
     user_unauthorized: 'You are unauthorized to view this page!',
 };
 
+function AppError({
+    statusCode = 500,
+    message = 'Server encountered some error. Please try after sometime..',
+    shortCode = 'server-err',
+} = {}) {
+    this.statusCode = statusCode;
+    this.shortCode = shortCode;
+    this.message = message;
+    this.toString = function () {
+        return `STATUS:[${this.statusCode}] | ${this.message}`;
+    };
+}
+
 module.exports = {
     ERROR,
+    AppError,
 };

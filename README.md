@@ -9,6 +9,11 @@ This is a short template, to pack EJS as templating engine, with Express and Mon
 * Mongoose and User Models
 * Role based management
 * Admin section
+* CSRF protection using SameSite header field, consistently sent by server in Response headers.
+
+    We don't need a CSRF token, as SameSite header cannot be manipulated at client end. Server consistently sends the SameSite header.
+
+* 
 
 ## Prerequisites and Setup
 
@@ -51,7 +56,6 @@ Email: `g@gmail.com` and Password: `goku`
 * Edit functionality from the dashboard. 
 * Password and confirm password fields to be checked
 * Lit Element to be used to make simple components for EJS
-* CSRF protection
 * User image saving and showcasing
 * Admin panel with MFA setup for admins
 * Writing Tests for the API endpoints

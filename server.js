@@ -20,6 +20,7 @@ const { allowOnlyIfAuthenticated, allowOnlyAdmins } = require('./middlewares');
 
 const { initializePassport, initializeDB } = require('./utils/authAndDBSetup');
 const { adminRouteInitialSetup } = require('./utils/adminSetup');
+const { AppError } = require('./utils/_globals');
 
 const app = express();
 
@@ -35,8 +36,15 @@ app.use(session({
     // express session
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+        sameSite: 'lax',
+        maxAge: 24 * 60 * 60 * 1000, // 24 hrs written in milliseconds
+        secure: process.env.NODE_ENV === 'production', // secure only on production environment
+        signed: true,
+    }
 }));
+
 // passport initialize and session usage
 app.use(passport.initialize());
 app.use(passport.session());

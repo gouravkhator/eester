@@ -26,28 +26,19 @@ const sendMail = (purpose = 'verify', {email, msg}) => {
             //as Math.random gives number between 0 and 1 inclusive of 0 but not 1 so 6-digit will only be there
 
             let mailOptions = {
-                from: 'Ebooks-go-app <gouravkhator9@gmail.com',
+                from: 'Express Starter <gouravkhator9@gmail.com',
                 to: email,
                 subject: 'Verification Email',
                 html: `<h2>Your OTP is ${otp}.</h2><br> <h3>Enter this otp in the verification page.<h3> <h3>Please don't share with anyone.</h3>`
             };
 
-            let temp = true;
             transporter.sendMail(mailOptions, (err, res) => {
                 if (err) {
-                    temp = false;
+                    throw new Error(err);
                 }
             });
-            if (temp === false) {
-                return {
-                    mailSent: false
-                };
-            } else {
-                return {
-                    mailSent: true,
-                    otp
-                };
-            }
+
+            return otp;
         default:
             break;
     }
