@@ -13,7 +13,7 @@ This is a short template, to pack EJS as templating engine, with Express and Mon
 
     We don't need a CSRF token, as SameSite header cannot be manipulated at client end. Server consistently sends the SameSite header.
 
-* 
+* Email verification via OTP over email
 
 ## Prerequisites and Setup
 
@@ -52,7 +52,6 @@ Email: `g@gmail.com` and Password: `goku`
 
 * Third Party Authentication Providers like Google, Twitter, Facebook
 * Error and flash message management
-* Email verification via OTP over email
 * Edit functionality from the dashboard. 
 * Password and confirm password fields to be checked
 * Lit Element to be used to make simple components for EJS

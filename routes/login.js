@@ -45,9 +45,9 @@ router.post('/verify', skipLoginsIfAuthenticated, async (req, res) => {
     const unverifiedUser = req.app.get('user-unverified') ?? null;
 
     try {
-        if (unverifiedUser?._id.length() == 0) {
+        if (unverifiedUser?._id.toString().length === 0) {
             throw new AppError({
-                statusCode: 400,
+                statusCode: 400, // Bad request, user provided is not valid
                 message: 'Please register before requesting for email verification..',
                 shortCode: 'no-user-provided',
             });
@@ -56,13 +56,13 @@ router.post('/verify', skipLoginsIfAuthenticated, async (req, res) => {
         const otpEntered = req.body.enteredOTP;
 
         if (parseInt(otpEntered) === parseInt(req.app.get('verification-otp') ?? -1)) {
-            // either get the otp set by server from req.app.get or compare with -1, which will obviously return false
-            // as otp set is a positive 6-digit integer..
+            // either get the otp set by server from req.app.get or if not present, then compare with -1, 
+            // which will obviously return false, as the otp set by server is a positive 6-digit integer..
             await unverifiedUser.save();
             req.app.disable('verification-otp');
             req.app.disable('user-unverified');
 
-            res.redirect('/auth/login'); // allow the login after registering a new account
+            res.redirect('/auth/login'); // redirect to login page, after registering and verifying a new account
         } else {
             throw new AppError({
                 statusCode: 400, // Bad request
@@ -71,16 +71,17 @@ router.post('/verify', skipLoginsIfAuthenticated, async (req, res) => {
             });
         }
     } catch (e) {
+        req.app.disable('verification-otp');
+        req.app.disable('user-unverified');
+
+        // TODO: set error message
         switch (e.shortCode) {
             case 'invalid-otp':
-                req.app.disable('verification-otp');
-                return res.render('login/verify_otp');
+                res.render('login/verify_otp');
             case 'no-user-provided':
-                req.app.disable('verification-otp');
-                return res.redirect('/auth/register');
+                res.redirect('/auth/register');
             default:
-                // TODO: set error message
-                return res.redirect('/auth/register');
+                res.redirect('/auth/register');
         }
     }
 });
@@ -95,12 +96,15 @@ router.post('/register', skipLoginsIfAuthenticated, async (req, res) => {
 
     try {
         const otpSetByServer = sendMail('verify', { email: user.email });
+
+        // set the user-unverifed and the otp set by server in the app settings
+        // once these settings get consumed, we can remove those settings by calling req.app.disable() method.
         req.app.set('user-unverified', user);
         req.app.set('verification-otp', otpSetByServer);
-        res.render('login/verify_otp');
+        res.render('login/verify_otp', {email: user.email});
     } catch (e) {
         // TODO: error message setting
-        // error could occur from sendMail, or from saving user
+        // here the error could occur from sendMail method
         res.redirect('/auth/register');
     }
 });

@@ -4,7 +4,7 @@
  * Else redirects to home page.
  */
 function skipLoginsIfAuthenticated(req, res, next) {
-    if (['/auth/login', '/auth/register'].includes(req.originalUrl)) {
+    if (['/auth/login', '/auth/register', '/auth/verify'].includes(req.originalUrl)) {
         if (req.isAuthenticated()) {
             return res.redirect('/');
         } else {
