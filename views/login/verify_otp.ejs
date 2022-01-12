@@ -2,7 +2,10 @@
     <h2 id="section-title">Email Verification</h2>
 
     <article id="section-content">
-        <pre>Kindly check the verification mail sent to <%= email %></pre>
+        <% if(email) { %>
+            <pre>Kindly check the verification mail sent to <%= email %></pre>
+        <% } %>
+        
         <form action="/auth/verify" method="POST">
             <input type="number" size="6" name="enteredOTP" />
             <button type="submit">Verify OTP</button>

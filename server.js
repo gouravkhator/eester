@@ -28,7 +28,7 @@ initializePassport(); // initialize passport using our own utils
 initializeDB(); // connect to mongodb using mongoose
 const { adminMain, adminRouter } = adminRouteInitialSetup(); // setup the admin panel with connecting it to the db connection 
 
-// -----middlewares : global for all requests-----
+// -----pre-middlewares : to be run before all requests-----
 app.use(textCompression()); // text compression
 app.use(flash()); // for messages transfer throughout the app
 
@@ -60,6 +60,16 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// TODO: make a middleware to pass process.env all variables in every ejs which requires those, and pass user to every ejs
+app.use((req, res, next)=>{
+    res.locals = {
+        recaptcha_site_key: process.env.RECAPTCHA_SITE_KEY,
+        user: req.user,
+    };
+
+    next();
+});
+
 // TODO: to support flash message
 // app.use((req, res, next) => {
 //     req.flash('password_incorrect', ERROR.password_incorrect);
@@ -77,6 +87,7 @@ app.get('/', (req, res) => {
     res.render('main', { user: req.user });
 });
 
+// ---post-middlewares - to be run after each request---
 // custom error handler -- should be put at the last, after every route
 // as the next(err) would hit this error handler after the normal routes..
 app.use((err, req, res, next) => {
@@ -87,7 +98,7 @@ app.use((err, req, res, next) => {
 });
 
 app.get('/*', (req, res) => {
-    res.render('404', { user: req.user }); // 404 page not found page
+    res.render('404'); // 404 page not found page
 });
 
 const PORT = process.env.PORT || 3000;

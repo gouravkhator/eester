@@ -50,11 +50,18 @@ Email: `g@gmail.com` and Password: `goku`
 
 ## Future Improvements
 
-* Third Party Authentication Providers like Google, Twitter, Facebook
+* Remove generic params from being passed individually in render function. (As it is passed globally in server.js)
 * Error and flash message management
+* reCaptcha checking while logging in
+* Remember me checkbox while login, which will modify maxAge property of cookies.
+* Third Party Authentication Providers like Google, Twitter, Facebook
 * Edit functionality from the dashboard. 
 * Password and confirm password fields to be checked
 * Lit Element to be used to make simple components for EJS
 * User image saving and showcasing
 * Admin panel with MFA setup for admins
 * Writing Tests for the API endpoints
+
+## To check and research
+
+* Check if the req.app.set settings can be manipulated from client side.

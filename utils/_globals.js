@@ -5,6 +5,7 @@ const ERROR = {
     user_unauthorized: 'You are unauthorized to view this page!',
 };
 
+// TODO: replace new Error() from every place with new AppError(), and also add redirect_url where it should put that error msg 
 function AppError({
     statusCode = 500,
     message = 'Server encountered some error. Please try after sometime..',
@@ -13,6 +14,7 @@ function AppError({
     this.statusCode = statusCode;
     this.shortCode = shortCode;
     this.message = message;
+
     this.toString = function () {
         return `STATUS:[${this.statusCode}] | ${this.message}`;
     };

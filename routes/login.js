@@ -7,7 +7,9 @@ const { AppError } = require('../utils/_globals');
 const sendMail = require('../utils/mailsender');
 
 router.get('/login', skipLoginsIfAuthenticated, (req, res) => {
-    res.render('login/login', { user: req.user });
+    res.render('login/login', {
+        user: req.user,
+    });
 });
 
 router.post('/login', skipLoginsIfAuthenticated, (req, res, next) => {
@@ -77,11 +79,14 @@ router.post('/verify', skipLoginsIfAuthenticated, async (req, res) => {
         // TODO: set error message
         switch (e.shortCode) {
             case 'invalid-otp':
-                res.render('login/verify_otp');
+                res.render('login/verify_otp', { email: unverifiedUser.email });
+                break;
             case 'no-user-provided':
                 res.redirect('/auth/register');
+                break;
             default:
                 res.redirect('/auth/register');
+                break;
         }
     }
 });
@@ -101,7 +106,7 @@ router.post('/register', skipLoginsIfAuthenticated, async (req, res) => {
         // once these settings get consumed, we can remove those settings by calling req.app.disable() method.
         req.app.set('user-unverified', user);
         req.app.set('verification-otp', otpSetByServer);
-        res.render('login/verify_otp', {email: user.email});
+        res.render('login/verify_otp', { email: user.email });
     } catch (e) {
         // TODO: error message setting
         // here the error could occur from sendMail method
