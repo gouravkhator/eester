@@ -16,12 +16,13 @@
     user = locals.user ?? null;
     recaptcha_site_key = locals.recaptcha_site_key ?? null;
     error_msg = locals.error_msg ?? '';
+    success_msg = locals.success_msg ?? '';
     email = locals.email ?? null;
     %>
 
     <div class="container">
         <%- include('../partials/_header.ejs') %>
-        <%- include('../partials/_error.ejs') %>
+        <%- include('../partials/_success_error_msg.ejs') %>
         <%- body %>
         <%- include('../partials/_footer.ejs') %>
     </div>

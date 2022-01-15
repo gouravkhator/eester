@@ -11,7 +11,7 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        lowercase: true, 
+        lowercase: true,
         // whether or not the data comes as upper case or lowercase or mixedcase,
         // it will always save as lowercase if we specify lowercase: true
         validate: [validator.isEmail, 'Please enter a valid email address']
@@ -38,8 +38,8 @@ userSchema.pre('save', async function (next) {
             this.password = hash;
             next();
         }
-    } catch (err) {
-        next(err);
+    } catch {
+        next(new Error('Error in saving the details! Please try again..'));
     }
 });
 
@@ -47,14 +47,10 @@ userSchema.pre('save', async function (next) {
 // so to make it simple, we added deleteOne method to the document also
 // and check if this refers to Document or to query, and if it is the document, then we can restrict deletion of user with role 'admin'
 // to use deleteOne for document, first call find method, then with user instance, we can call deleteOne method
-userSchema.pre('deleteOne', {document: true, query: true}, function (next){
-    if(this instanceof mongoose.Document){
-        if(this.role === 'admin'){
-            next(new Error('Admin should not be deleted..'));
-        }else{
-            next();
-        }
-    }else{
+userSchema.pre('deleteOne', { document: true, query: true }, function (next) {
+    if (this instanceof mongoose.Document && this.role === 'admin') {
+        next(new Error('Admin should not be deleted..'));
+    } else {
         next();
     }
 });
@@ -64,7 +60,7 @@ userSchema.methods.passwordIsValid = function (guessedPassword) {
     try {
         return bcrypt.compare(guessedPassword, this.password);
     } catch (err) {
-        throw err;
+        throw new Error('Password is invalid');
     }
 };
 

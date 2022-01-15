@@ -16,11 +16,10 @@ const session = require('express-session');
 // routers
 const loginRouter = require('./routes/login');
 const userRouter = require('./routes/user');
-const { allowOnlyIfAuthenticated, allowOnlyAdmins } = require('./middlewares');
+const { allowOnlyIfAuthenticated, allowOnlyAdmins, handleErrors, passEnvToLocals } = require('./middlewares');
 
 const { initializePassport, initializeDB } = require('./utils/authAndDBSetup');
 const { adminRouteInitialSetup } = require('./utils/adminSetup');
-const { AppError } = require('./utils/_globals');
 
 const app = express();
 
@@ -60,22 +59,7 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// TODO: make a middleware to pass process.env all variables in every ejs which requires those, and pass user to every ejs
-app.use((req, res, next)=>{
-    res.locals = {
-        recaptcha_site_key: process.env.RECAPTCHA_SITE_KEY,
-        user: req.user,
-    };
-
-    next();
-});
-
-// TODO: to support flash message
-// app.use((req, res, next) => {
-//     req.flash('password_incorrect', ERROR.password_incorrect);
-//     req.flash('user_not_found', ERROR.user_not_found);
-//     next();
-// });
+app.use(passEnvToLocals); // pass environment variables and some globals to locals in ejs files, for every request
 
 app.use(adminMain.options.rootPath, allowOnlyAdmins, adminRouter); // setup admin panel with admin Router
 
@@ -84,21 +68,16 @@ app.use('/auth', loginRouter);
 app.use('/user', allowOnlyIfAuthenticated, userRouter);
 
 app.get('/', (req, res) => {
-    res.render('main', { user: req.user });
+    res.render('index', { user: req.user });
 });
 
 // ---post-middlewares - to be run after each request---
 // custom error handler -- should be put at the last, after every route
 // as the next(err) would hit this error handler after the normal routes..
-app.use((err, req, res, next) => {
-    res.locals.error_msg = err.message;
-    res.status(err.statusCode ?? 500);
-    // ? INFO: res.locals does not work with redirect method, we have to use render here
-    res.redirect(err.redirectUrl ?? '/');
-});
+app.use(handleErrors);
 
 app.get('/*', (req, res) => {
-    res.render('404'); // 404 page not found page
+    return res.status(404).render('404'); // 404 page not found page
 });
 
 const PORT = process.env.PORT || 3000;

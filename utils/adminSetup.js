@@ -2,7 +2,7 @@ const AdminJS = require('adminjs');
 const AdminJSExpress = require('@adminjs/express');
 const AdminJSMongoose = require('@adminjs/mongoose');
 
-const User = require('../models/user');
+const User = require('../models/User');
 
 function adminRouteInitialSetup() {
     AdminJS.registerAdapter(AdminJSMongoose);

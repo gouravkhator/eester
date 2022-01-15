@@ -1,0 +1,19 @@
+*{
+    box-sizing: border-box;
+    // margin: 0;
+    // padding: 0;
+}
+
+body, html{
+    width: 100%;
+    height: 100%;
+}
+
+// global styles
+#success-msg{
+    color: rgb(35, 104, 35);
+}
+
+#error-msg{
+    color: rgb(172, 45, 23);
+}

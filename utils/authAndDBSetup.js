@@ -3,8 +3,7 @@ const passport = require('passport');
 // passport strategies
 const LocalStrategy = require('passport-local').Strategy;
 
-const User = require('../models/user');
-const { ERROR } = require('./_globals');
+const User = require('../models/User');
 
 function initializePassport() {
     const authenticateUser = async (email, password, done) => {
@@ -20,14 +19,15 @@ function initializePassport() {
         3rd param is the object containing error message for the user.
         */
         if (user == null) {
-            return done(null, false, { error_msg: ERROR.user_notfound_email });
+            // as the status codes for both of this errors in passport auth are different, so we send the status code too from here
+            return done(null, false, { error_msg: 'No user found with the entered email id!', statusCode: 404 });
         }
 
         try {
             if (await user.passwordIsValid(password)) {
                 return done(null, user);
             } else {
-                return done(null, false, { error_msg: ERROR.password_incorrect });
+                return done(null, false, { error_msg: 'Password is incorrect! Please try again..', statusCode: 401 });
             }
         } catch (e) {
             return done(e);
@@ -44,7 +44,7 @@ function initializePassport() {
 }
 
 function initializeDB() {
-    mongoose.connect(process.env.DATABASE_URL,
+    mongoose.connect(process.env.MONGO_URI,
         { useNewUrlParser: true, useUnifiedTopology: true });
 
     const dbConnection = mongoose.connection;

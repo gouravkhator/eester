@@ -5,7 +5,7 @@ xoauth2 package is mainly required in the background
 */
 const xoauth2 = require('xoauth2');
 
-const sendMail = (purpose = 'verify', {email, msg}) => {
+const sendMail = (purpose = 'verify', { email, msg }) => {
     let transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
         port: 465,
@@ -32,11 +32,17 @@ const sendMail = (purpose = 'verify', {email, msg}) => {
                 html: `<h2>Your OTP is ${otp}.</h2><br> <h3>Enter this otp in the verification page.<h3> <h3>Please don't share with anyone.</h3>`
             };
 
+            let mailSendError = false;
+
             transporter.sendMail(mailOptions, (err, res) => {
                 if (err) {
-                    throw new Error(err);
+                    mailSendError = true;
                 }
             });
+
+            if (mailSendError === true) {
+                throw new Error('Mail could not be sent..');
+            }
 
             return otp;
         default:

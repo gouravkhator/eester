@@ -1,0 +1,13 @@
+<!-- 
+    If error is there, we just show that only, else show success if success is there.
+    We don't show both messages
+-->
+<% if(error_msg) { %>
+    <div id="error-msg">
+        <%= error_msg %>
+    </div>
+<% } else if(success_msg) { %>
+    <div id="success-msg">
+        <%= success_msg %>
+    </div>
+<% } %>
