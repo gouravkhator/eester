@@ -60,17 +60,16 @@ User id: 61decad85a1cda890151673f
 
 ## Future Improvements
 
-* Remove generic params from being passed individually in render function. (As it is passed globally in server.js)
+* Create a link and send that link for verification, instead of the manual otp, and have a timer for the expiration of that link..
 * reCaptcha checking while logging in
 * Remember me checkbox while login, which will modify maxAge property of cookies.
 * Third Party Authentication Providers like Google, Twitter, Facebook
-* Edit functionality from the dashboard. 
-* Password and confirm password fields to be checked
-* Lit Element to be used to make simple components for EJS
-* User image saving and showcasing
-* Admin panel with MFA setup for admins
-* Writing Tests for the API endpoints
-* Remove user passing from every route as it is passed globally through middlewares.
+* Edit functionality from the dashboard.
+* Password and confirm password fields to be checked and validated.
+* Lit Element to be used to make simple components for EJS.
+* User profile pic saving in database and doing CRUD operations on it.
+* Add MFA to the admin page for improving security
+* Writing Mocha Tests for the API endpoints
 * Make a short message code for AppError class, by slugifying the actual message, if the short message is not passed.
 * Use HTTP2.
 
@@ -81,6 +80,6 @@ User id: 61decad85a1cda890151673f
 
 ## Flow of error handling
 
-Error should be thrown like next(err) or some error message, and while catching that error in routes, we can have AppError as the modified error of our app.
+In any models or other utils, we should throw errors either like next(err) in mongoose hooks, or some error message directly. While catching that error in routes, we can have AppError handle the errors, and throw AppError, as the modified error of our app.
 
-This will again call next(err) but now we handle that in handleErrors middleware.
+This will again call next(err) in the routes, but now this err will mostly be instance of AppError, and now we can handle that err in handleErrors middleware. This handleErrors middleware runs as the last middlware for every request.

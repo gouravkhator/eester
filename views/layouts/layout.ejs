@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Express Starter</title>
 
+    <!-- Recaptcha not yet implemented.. -->
     <script src="https://www.google.com/recaptcha/api.js?render=<%= recaptcha_site_key %>"></script>
 
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
     <% 
-    <!-- Adding the passed locals in the local ejs variables, else it will give the variable not defined issue-->
+    <!-- Adding the passed locals in the local ejs variables, else it will give the variable not defined error in ejs files-->
     user = locals.user ?? null;
     recaptcha_site_key = locals.recaptcha_site_key ?? null;
     error_msg = locals.error_msg ?? '';

@@ -12,7 +12,7 @@ function authorizeUser(req, res, next) {
         return next(new AppError({
             statusCode: 401,
             shortMsg: 'user_unauthorized',
-            message: 'You are not authorized to view or make changes to this page..',
+            message: 'You are not authorized to make such requests to the desired page..',
             targetUri: '/',
         }));
     }

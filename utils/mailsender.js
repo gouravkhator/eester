@@ -44,7 +44,7 @@ const sendMail = (purpose = 'verify', { email, msg }) => {
                 throw new Error('Mail could not be sent..');
             }
 
-            return otp;
+            return otp; // this otp is set from server end..
         default:
             break;
     }

@@ -1,10 +1,9 @@
-<% user = locals.user ?? null %>
-
 <section id="dashboard">
     <h2 id="section-title">Profile</h2>
 
     <article id="section-content">
         <% if (!user) { %>
+            <!-- Just another check to be fully sure, otherwise this check is not really needed, as we render dashboard only when user is there.. -->
             <h3>Kindly click on login and then view your profile..</h3>
         <% } else { %>
             <table>

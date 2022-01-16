@@ -1,4 +1,5 @@
 <% if( loggingIn == false ) { %>
+<!-- If we are not in login page, we require name input too  -->
 <div>
     <label for="name">Name</label>
     <input type="text" name="name" value="<%= user && user.name %>" required/>

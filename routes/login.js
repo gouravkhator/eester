@@ -58,7 +58,7 @@ router.post('/register', skipLoginsIfAuthenticated, async (req, res, next) => {
         if (existingEntry !== null) {
             throw new AppError({
                 statusCode: 400,
-                message: 'Email already registered! Please sign in with that mail id..',
+                message: 'Email already registered! Please login with that mail id..',
                 shortMsg: 'email-already-registered',
                 targetUri: '/auth/register',
             });

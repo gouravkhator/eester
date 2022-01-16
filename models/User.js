@@ -24,9 +24,10 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
         default: 'general_user',
-        immutable: true,
+        immutable: true, // for improving security, and no one can edit the role form webapp or some requests
+        // roles will be mutable only in the database end, and not even in admin end, once it is set.
         lowercase: true,
-        enum: ['admin', 'general_user'],
+        enum: ['admin', 'general_user'], // enums for having exact roles
     }
 });
 

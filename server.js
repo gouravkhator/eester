@@ -10,7 +10,6 @@ const expressLayouts = require('express-ejs-layouts');
 const textCompression = require('compression');
 const methodOverride = require('method-override');
 const passport = require('passport');
-const flash = require('express-flash');
 const session = require('express-session');
 
 // routers
@@ -29,7 +28,6 @@ const { adminMain, adminRouter } = adminRouteInitialSetup(); // setup the admin 
 
 // -----pre-middlewares : to be run before all requests-----
 app.use(textCompression()); // text compression
-app.use(flash()); // for messages transfer throughout the app
 
 app.use(session({
     // express session
@@ -37,14 +35,15 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
+        // sameSite is set to lax, to prevent CSRF attack..
         sameSite: 'lax',
         maxAge: 24 * 60 * 60 * 1000, // 24 hrs written in milliseconds
         secure: process.env.NODE_ENV === 'production', // secure only on production environment
-        signed: true,
+        signed: true, // signed cookie
     }
 }));
 
-// passport initialize and session usage
+// initialize passport and its respective session too, for having the auth management
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(methodOverride('_method')); // method override for doing other REST requests
@@ -64,11 +63,11 @@ app.use(passEnvToLocals); // pass environment variables and some globals to loca
 app.use(adminMain.options.rootPath, allowOnlyAdmins, adminRouter); // setup admin panel with admin Router
 
 // routers and routes
-app.use('/auth', loginRouter);
-app.use('/user', allowOnlyIfAuthenticated, userRouter);
+app.use('/auth', loginRouter); // for login, we have different middlewares, so we call them in the login routes file only 
+app.use('/user', allowOnlyIfAuthenticated, userRouter); // for user, the allowOnlyIfAuthenticated middleware is mandatory for all its requests, so we call it here
 
 app.get('/', (req, res) => {
-    res.render('index', { user: req.user });
+    res.render('index');
 });
 
 // ---post-middlewares - to be run after each request---
@@ -77,6 +76,7 @@ app.get('/', (req, res) => {
 app.use(handleErrors);
 
 app.get('/*', (req, res) => {
+    // 404 page is created differently, so that we just return a 404 not found instead of global error messages
     return res.status(404).render('404'); // 404 page not found page
 });
 
