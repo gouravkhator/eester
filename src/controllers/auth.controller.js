@@ -1,16 +1,11 @@
-const router = require('express').Router();
 const passport = require('passport');
-const { skipLoginsIfAuthenticated, allowOnlyIfAuthenticated } = require('../middlewares');
+
 const User = require('../models/User');
 
-const { AppError } = require('../utils/errorsUtil');
-const sendMail = require('../utils/mailsender');
+const { AppError } = require('../utils/errors.util');
+const sendMail = require('../utils/mail-sender.util');
 
-router.get('/login', skipLoginsIfAuthenticated, (req, res) => {
-    return res.render('login/login');
-});
-
-router.post('/login', skipLoginsIfAuthenticated, (req, res, next) => {
+function login(req, res, next) {
     passport.authenticate('local', function (server_err, user, info) {
         if (server_err) {
             return next(server_err); // some server error
@@ -38,13 +33,9 @@ router.post('/login', skipLoginsIfAuthenticated, (req, res, next) => {
             return res.redirect('/user/' + user._id);
         });
     })(req, res, next);
-});
+}
 
-router.get('/register', skipLoginsIfAuthenticated, (req, res) => {
-    return res.render('login/register');
-});
-
-router.post('/register', skipLoginsIfAuthenticated, async (req, res, next) => {
+async function signup(req, res, next) {
     const user = new User({
         name: req.body.name,
         email: req.body.email,
@@ -60,7 +51,7 @@ router.post('/register', skipLoginsIfAuthenticated, async (req, res, next) => {
                 statusCode: 400,
                 message: 'Email already registered! Please login with that mail id..',
                 shortMsg: 'email-already-registered',
-                targetUri: '/auth/register',
+                targetUri: '/auth/signup',
             });
         }
 
@@ -70,7 +61,7 @@ router.post('/register', skipLoginsIfAuthenticated, async (req, res, next) => {
         // once these settings get consumed, we can remove those settings by calling req.app.disable() method.
         req.app.set('user-unverified', user);
         req.app.set('verification-otp', otpSetByServer);
-        return res.render('login/verify_otp', { email: user.email });
+        return res.render('auth/verify_otp', { email: user.email });
     } catch (e) {
         if (e.shortMsg === 'email-already-registered') {
             return next(e); // either user already present
@@ -79,24 +70,24 @@ router.post('/register', skipLoginsIfAuthenticated, async (req, res, next) => {
             const err = new AppError({
                 statusCode: 400,
                 message: e.message ?? 'Mail could not be sent! Please try again..',
-                targetUri: '/auth/register',
+                targetUri: '/auth/signup',
             });
 
             return next(err);
         }
     }
-});
+}
 
-router.post('/verify', skipLoginsIfAuthenticated, async (req, res, next) => {
+async function verifyOTP(req, res, next) {
     const unverifiedUser = req.app.get('user-unverified') ?? null;
 
     try {
         if (unverifiedUser?._id.toString().length === 0) {
             throw new AppError({
                 statusCode: 400, // Bad request, user provided is not valid
-                message: 'Please register before requesting for email verification..',
+                message: 'Please signup before requesting for email verification..',
                 shortMsg: 'invalid-user',
-                targetUri: '/auth/register',
+                targetUri: '/auth/signup',
             });
         }
 
@@ -110,7 +101,7 @@ router.post('/verify', skipLoginsIfAuthenticated, async (req, res, next) => {
             req.app.disable('verification-otp');
             req.app.disable('user-unverified');
 
-            return res.render('login/login', { success_msg: 'Your account has been successfully created, please login to access the account..' }); // redirect to login page, after registering and verifying a new account
+            return res.render('auth/login', { success_msg: 'Your account has been successfully created, please login to access the account..' }); // redirect to login page, after registering and verifying a new account
         } else {
             throw new AppError({
                 statusCode: 400, // Bad request
@@ -118,7 +109,7 @@ router.post('/verify', skipLoginsIfAuthenticated, async (req, res, next) => {
                 shortMsg: 'invalid-otp'
                 /*
                 Here we cannot have targetUri as /auth/verify, as then we have to apply a get route to /auth/verify.
-                This will have issues, as without register page, verify route will be visible.
+                This will have issues, as without signup page, verify route will be visible.
                 We can restrict that route, but it will cause more issues.
                 So, we just add a shortMsg here and we deal with that in catch block.
                 */
@@ -137,7 +128,7 @@ router.post('/verify', skipLoginsIfAuthenticated, async (req, res, next) => {
         */
         switch (e.shortMsg) {
             case 'invalid-otp':
-                return res.status(e.statusCode).render('login/verify_otp', {
+                return res.status(e.statusCode).render('auth/verify_otp', {
                     error_msg: e.message,
                     email: unverifiedUser?.email ?? null,
                 });
@@ -148,17 +139,22 @@ router.post('/verify', skipLoginsIfAuthenticated, async (req, res, next) => {
                     statusCode: 409,
                     // 409 conflict : meaning that the request could not be completed, as conflicts are there with state of resource.
                     message: 'Error in creating the account! Please try again..',
-                    targetUri: '/auth/register',
+                    targetUri: '/auth/signup',
                 });
 
                 return next(err);
         }
     }
-});
+}
 
-router.post('/logout', allowOnlyIfAuthenticated, (req, res) => {
+async function logout(req, res) {
     req.logout();
     return res.redirect('/');
-});
+}
 
-module.exports = router;
+module.exports = {
+    login,
+    signup,
+    verifyOTP,
+    logout,
+};

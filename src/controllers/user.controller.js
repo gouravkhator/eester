@@ -1,35 +1,7 @@
-const router = require('express').Router();
-const { AppError } = require('../utils/errorsUtil');
-
 const User = require('../models/User');
+const { AppError } = require('../utils/errors.util');
 
-function authorizeUser(req, res, next) {
-    // for any route to the request with /:id,
-    // then either an admin or that user who is having same id, can modify or see that request.
-    if ((req.user._id.toString() === req.params.id) || (req.user.role === 'admin')) {
-        return next();
-    } else {
-        return next(new AppError({
-            statusCode: 401,
-            shortMsg: 'user_unauthorized',
-            message: 'You are not authorized to make such requests to the desired page..',
-            targetUri: '/',
-        }));
-    }
-}
-
-router.get('/dashboard', (req, res) => {
-    return res.render('user/dashboard');
-});
-
-// keeping the edit page and route for now
-// After we implement dynamic edit in the dashboard itself, we can remove this route
-router.get('/edit', (req, res) => {
-    return res.render('user/edit_user');
-});
-
-/* ---Some other api endpoints for nerds--- */
-router.get('/:id', authorizeUser, async (req, res) => {
+async function getUserByID(req, res) {
     let user = null;
 
     try {
@@ -44,9 +16,9 @@ router.get('/:id', authorizeUser, async (req, res) => {
 
         return next(err);
     }
-});
+}
 
-router.put('/:id', authorizeUser, async (req, res) => {
+async function updateUser(req, res) {
     const updatedDetails = req.body;
     let existingUser = null;
 
@@ -79,9 +51,9 @@ router.put('/:id', authorizeUser, async (req, res) => {
             return next(err);
         }
     }
-});
+}
 
-router.delete('/:id', authorizeUser, async (req, res, next) => {
+async function deleteUser(req, res, next) {
     let user = null;
 
     try {
@@ -92,7 +64,7 @@ router.delete('/:id', authorizeUser, async (req, res, next) => {
         // it refreshes on reload..
         // so, we need to manually set user to null for one time. It is done to set user in headers also, to null.
         // or else, it will show Logout and Profile links, which are shown when user is not null.
-        return res.render('login/login', { user: null, success_msg: 'Your account has been successfully deleted' });
+        return res.render('auth/login', { user: null, success_msg: 'Your account has been successfully deleted' });
     } catch (e) {
         if (user === null) {
             // we could not find the user by id
@@ -113,6 +85,10 @@ router.delete('/:id', authorizeUser, async (req, res, next) => {
             return next(err);
         }
     }
-});
+}
 
-module.exports = router;
+module.exports = {
+    getUserByID,
+    updateUser,
+    deleteUser,
+};

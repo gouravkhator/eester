@@ -73,12 +73,36 @@ User id: 61decad85a1cda890151673f
 * Make a short message code for AppError class, by slugifying the actual message, if the short message is not passed.
 * Use HTTP2.
 
+## Project Structure
+
+> Credit goes to [geshan's expressjs-structure](https://github.com/geshan/expressjs-structure). I also created the similar file structure layout within my implemented code.
+
+The main article for organizing the project structure is given [here](https://blog.logrocket.com/organizing-express-js-project-structure-better-productivity/).
+
+**Folders and their functions:**
+* `src/controllers`: Controllers control the request and response that goes in and out, to and from the route. They are like utils to the routes.
+* `src/middlewares`: Here we store middlewares, which behave like helper middlewares to the controllers and other requests.
+* `src/models`: Models are user schema with all ODM/ORM related methods.
+* `src/public`: Public folder encompasses the styles, client-side javascripts, and images, that will be used client-side. 
+* `src/routes`: Routes will contain the created express router, and those routes uses controllers for managing their requests and response flow.
+* `src/services`: Services contain necessary methods for different phases of the app.
+
+    Example: Connecting to a db, or initializing authentication, or doing cleans up at the end.
+
+* `src/utils`: Utilities and helpers required throughout the app.
+* `src/views`: Views contain the ejs files for rendering on page, with content passed from the server.
+* `test/`: Refer the below image.
+
+    ![Test Folder Structure](https://blog.logrocket.com/wp-content/uploads/2022/01/Express-test-folder-structure.png)
+
+    As you can see, ***tests for each unit of the src folder, will be created in the same structure in test folder..***
+
 ## To check and research
 
 * Check if the req.app.set settings can be manipulated from client side.
 * Check how to send proper headers for passport authentication via thunderclient or postman, for testing authentication. 
 
-## Flow of error handling
+## Flow of error handling in this template
 
 In any models or other utils, we should throw errors either like next(err) in mongoose hooks, or some error message directly. While catching that error in routes, we can have AppError handle the errors, and throw AppError, as the modified error of our app.
 
