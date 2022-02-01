@@ -7,7 +7,7 @@
         <% } %>
         
         <form action="/auth/verify" method="POST">
-            <input type="number" size="6" name="enteredOTP" />
+            <input type="number" min="100000" max="999999" name="enteredOTP" required/>
             <button type="submit">Verify OTP</button>
         </form>
 

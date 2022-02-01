@@ -1,8 +1,12 @@
 if (process.env.NODE_ENV !== 'production') {
     // development mode
+    /* 
+    either NODE_ENV will be 'production', or it can be set to nothing too.
+    So, when NODE_ENV is not set, it is treated as in 'development' mode by us.
+    */
     require('dotenv').config({
-        path: '.env'
-    })
+        path: __dirname + '/.env'
+    });
 }
 
 const express = require('express');
@@ -12,15 +16,15 @@ const methodOverride = require('method-override');
 const passport = require('passport');
 const session = require('express-session');
 
-const loginRouter = require('./src/routes/auth.route');
-const userRouter = require('./src/routes/user.route');
+const loginRouter = require('./routes/auth.route');
+const userRouter = require('./routes/user.route');
 
-const { allowOnlyIfAuthenticated, allowOnlyAdmins } = require('./src/middlewares/auth.middleware');
-const { passEnvToLocals, handleErrors } = require('./src/middlewares/global.middleware');
+const { allowOnlyIfAuthenticated, allowOnlyAdmins } = require('./middlewares/auth.middleware');
+const { passEnvToLocals, handleErrors } = require('./middlewares/global.middleware');
 
-const { initializePassport } = require('./src/services/passport-init.service');
-const {connectDB} = require('./src/services/db-connect.service');
-const { adminRouteInitialSetup } = require('./src/services/admin-setup.service');
+const { initializePassport } = require('./services/passport-init.service');
+const { connectDB } = require('./services/db-connect.service');
+const { adminRouteInitialSetup } = require('./services/admin-setup.service');
 
 const app = express();
 
@@ -53,12 +57,12 @@ app.use(methodOverride('_method')); // method override for doing other REST requ
 
 // setting views, layouts and public static files
 app.set('view engine', 'ejs');
-app.set('views', __dirname + '/src/views'); // views are set in /src/views
+app.set('views', __dirname + '/views');
 
 app.use(expressLayouts);
 app.set('layout', 'layouts/layout'); // layouts here is relative to views folder now, as it is the set folder for ejs files
 
-app.use(express.static('src/public')); // src/public is the folder which will serve static files
+app.use(express.static(__dirname + '/public'));
 
 // json and urlencoded for parsing body to respective format
 app.use(express.json());
