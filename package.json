@@ -44,6 +44,7 @@
     "template",
     "node",
     "starter-template",
+    "mongodb",
     "boilerplate"
   ],
   "license": "MIT",
