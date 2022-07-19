@@ -34,8 +34,7 @@
     "nodemon": "^2.0.15"
   },
   "author": {
-    "name": "Gourav Khator",
-    "email": "gouravkhator9@gmail.com"
+    "name": "Gourav Khator"
   },
   "keywords": [
     "eester",
@@ -47,7 +46,7 @@
     "mongodb",
     "boilerplate"
   ],
-  "license": "MIT",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gouravkhator/eester.git"
