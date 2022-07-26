@@ -2,6 +2,8 @@
 
 This is a short template, to pack EJS as templating engine, with Express and Mongoose to provide a basic starter package for building express webapps.
 
+Check out [this Ebooks-go-app repo](https://github.com/gouravkhator/Ebooks-go-app) for any reference on improvements done, and if needed try to implement that feature in this template too.
+
 ## Prerequisites and Setup
 
 - Run the below command to install the dependencies:
@@ -59,6 +61,7 @@ User id: 61decad85a1cda890151673f
 
 - [x] Email verification via OTP over email
 - [x] Error management along with HTTP status codes.
+- [ ] Replace req.app.set for user specific settings like otp set by server for this user, or other things. Check out [this Ebooks-go-app repo](https://github.com/gouravkhator/Ebooks-go-app) for reference.
 - [ ] JWT tokens instead of session id for authentication, and use one server for auth and another for the api, to provide scalability.
 - [ ] Create a link and send that link for verification, instead of the manual otp, and have a timer for the expiration of that link..
 - [ ] reCaptcha checking while logging in
